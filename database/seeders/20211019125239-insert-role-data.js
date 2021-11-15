@@ -18,12 +18,6 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          name: "trainingStaff",
-          description: "trainingStaff",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
           name: "trainer",
           description: "trainer",
           createdAt: new Date(),

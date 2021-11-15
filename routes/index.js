@@ -10,11 +10,11 @@ router.get("/", function (req, res, next) {
 });
 
 /* GET admin bootstrap page. */
-// router.get("/templates", function (req, res, next) {
-//   res.render("templates_bootstrap/_master_admin", {
-//     title: "Index Page",
-//     content: "../admin_view/index",
-//   });
-// });
+router.get("/", function (req, res, next) {
+  res.render("templates_bootstrap/_master", {
+    title: "Index Page",
+    content: "../admin_view/index",
+  });
+});
 
 module.exports = router;
