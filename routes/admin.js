@@ -23,6 +23,7 @@ router.get("/", async function (req, res, next) {
   });
 });
 
+/* GET create trainer page. */
 router.get("/createTrainer", async function (req, res, next) {
   const trainerRole = await Role.findOne({
     where: {
@@ -37,6 +38,7 @@ router.get("/createTrainer", async function (req, res, next) {
   });
 });
 
+// Process when creating a trainer
 router.post("/addTrainer", async function (req, res, next) {
   // res.send(req.body);
 
@@ -68,7 +70,7 @@ router.post("/addTrainer", async function (req, res, next) {
     // If create trainer information failed then back to create trainer page
     if (!trainer) {
       await transaction.rollback();
-      res.redirect("/admin/createTrainer"); //body guard
+      res.redirect("/admin/createTrainer");
     }
     // create trainer account
     const trainerAccount = await Account.create(
@@ -97,6 +99,7 @@ router.post("/addTrainer", async function (req, res, next) {
   }
 });
 
+// Get view trainer page
 router.get("/viewTrainer/:userId", async (req, res) => {
   // res.send(req.params);
 
@@ -114,6 +117,7 @@ router.get("/viewTrainer/:userId", async (req, res) => {
   });
 });
 
+// Function to delete the trainer on trainer and account table
 router.get("/deleteTrainer/:id/:userId", async (req, res) => {
   const { id, userId } = req.params;
   try {
@@ -153,6 +157,40 @@ router.get("/deleteTrainer/:id/:userId", async (req, res) => {
     // await deleteTransaction.rollback();
     res.redirect("/admin");
   }
+});
+
+// Function to change password of trainer and staff
+router.get("/changePass/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const account = await Account.findOne({
+    attribute: ["id", "password"],
+    where: { id: id },
+  });
+
+  res.render("templates/master", {
+    title: "Change Password",
+    content: "../account_view/changePass",
+    account,
+  });
+});
+
+router.post("/updatePass", async (req, res) => {
+  const { id, newPassword, confirmPassword } = req.body;
+
+  // Validation: check password
+  if (newPassword !== confirmPassword) {
+    return res.redirect(`/admin/changePass/${id}`);
+  }
+
+  const newAccount = await Account.update(
+    { password: newPassword },
+    {
+      where: { id },
+    }
+  );
+
+  return res.redirect("/admin");
 });
 
 module.exports = router;
